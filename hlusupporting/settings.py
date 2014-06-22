@@ -76,16 +76,22 @@ WSGI_APPLICATION = 'hlusupporting.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'hlusupportive',
+#        'HOST': '127.0.0.1',
+#        'PORT': '3306',
+#        'USER': 'root',
+#        'PASSWORD': '30121992',
+#        'OPTIONS': {'charset': 'utf8'},
+#        
+#    }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'hlusupportive',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': '30121992',
-        'OPTIONS': {'charset': 'utf8'},
-        
     }
 }
 
