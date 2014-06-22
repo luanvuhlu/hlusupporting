@@ -1,0 +1,45 @@
+table#timetable{
+	width: 100%;
+	color: #428bca;
+}
+table#timetable th{
+	
+}
+table#timetable td{
+	
+}
+#timetable,#timetable th , #timetable td{
+	border:solid 1px #428bca;
+} 
+tr.header{
+	weight:900;
+}
+table#timetable td.theory_hour a.subject-name{
+	color: #3c763d;
+}
+table#timetable td.seminar_hour a.subject-name{
+	color: #a94442;
+}
+table#timetable td.today{
+	background:green;
+}
+div.day-info{
+position:absolute;
+display:none;
+}
+td:hover div.day-info{
+display:block;
+}
+td a.subject-name:hover{
+	cursor:pointer;
+}
+div.week-info{
+width:600px;
+float:left;
+}
+div.nav-week{
+margin-right:10px;
+}
+div.nav-week a{
+
+}

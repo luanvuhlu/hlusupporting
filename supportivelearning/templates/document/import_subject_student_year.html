@@ -1,0 +1,50 @@
+
+<div>
+	<form action="/import/weekdocument/save/" method="post" class='form-horizontal'>
+	{% csrf_token %}
+	{% for w in weeks %}
+
+	<div>Week: {{w}}
+	<input type="hidden" name="week" value="{{w}}" />
+		{% for d in days %}
+		<div>
+		Day {{d}}
+		<div class='form-group'>
+			<lable for='type{{w}}'>Type:
+			<select name="day_type" class='form-control'' id='type' >
+				<option value="True">Theory</option>
+				<option value="False">Seminar</option>
+			</select>
+			</div>
+			<div class='form-group'>
+			<label for='number{{w}}'>
+			Number:
+			</label>
+			<select name="day_number" class='form-control'' id='number{{w}}' >
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+			</select>
+			</div>
+			<div class='form-group'>
+			<label for='content{{w}}'>
+			  Content:
+			  </label>
+			  <textarea name="day_content" rows="5" id='content{{w}}' cols="40" class='form-control'' ></textarea>
+			  </div>
+			  Note:
+			  <input name="day_note" type="text"  class='form-control''  />
+			  
+			</div>
+		</div>
+
+		{% endfor %}
+		<hr />
+	{% endfor %}
+	</div>
+	<div>
+	<input type="submit" value="update"  class="btn btn-primary"/>
+	</div>
+	</form>
+	</div>
+

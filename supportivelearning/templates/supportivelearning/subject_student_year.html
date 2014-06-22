@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}{{ subject }}{% endblock %} 
+{% block content%}
+	{% if subject %}
+	{{ subject }}
+	{% else %}
+	<p>Cannot find subject
+	{% endif %}
+{% endblock %}

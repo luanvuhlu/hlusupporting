@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Timetable{% endblock %}
+{% block static %}
+<script>
+$(document).ready(function(){
+
+});
+</script>
+{% endblock %} 
+{% block content%}
+<div class="container-fluid">
+{% if table %}
+<div  class="btn-toolbar" >
+	<div class='nav-week btn-group'>
+	{% if prev %}
+	<a href="/timetable/{{ timetable_id }}/{{prev.year}}/{{prev.month}}/{{prev.day}}/" class='btn btn-primary glyphicon glyphicon-backward' ></a>
+	{% endif %}
+	{% if next %}
+	<a href="/timetable/{{ timetable_id }}/{{next.year}}/{{next.month}}/{{next.day}}/" class='btn btn-primary glyphicon glyphicon-forward' ></a>
+	{% endif %}
+	</div>
+</div>
+<div>
+	<table id="timetable" class='table table-bordered'>
+	<thead>
+  <tr class="header">
+  <th>Hours</th>
+    {% for day in days_in_week %}
+    <th class='text-center'>
+    	<div >{{ day.name }}</div>
+    	<div>{{ day.date }}</div>
+    </th>
+    {% endfor %}
+    <!-- 
+    <th>Monday</th>
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
+    <th>Saturday</th>
+     -->
+</tr>
+</thead>
+<tbody>
+{% for tr in table %}
+<tr>
+<td>{{ forloop.counter }}</td>
+{% for td in tr %}
+{% if td.day %}
+<td rowspan="{{td.rowspan}}" class="{{ td.class }}">
+	<a class="subject-name" href="/subject/{{td.day.timetable_subject.subject.id}}-{{td.slug}}.html">{{ td.day.timetable_subject }}</a>
+	<br />
+	{{ td.day.location }}{{ td.day.room }}
+	<div class="day-info bg-info text-info">
+	{% if td.content %}
+	<div><b>Cotent: </b>
+	{% for content in td.content %}
+	<div>{{content}}</div>
+	{% endfor %}
+	</div>
+	{% endif %}
+	{% if td.note %}
+	<div><b>Note: </b>
+	{% for note in td.note %}
+	<div>{{note}}</div>
+	{% endfor %}
+	</div>
+	{% endif %}
+	</div>
+</td>
+{% else %}
+<td></td>
+{% endif %}
+{% endfor %}
+<td></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% if week_infos %}
+<div class='week-info bg-info text-success'>
+Info:
+{% for info in week_infos %}
+<div>{{info.subject}}
+
+</div>
+<div>{{info.note}}</div>
+<div>{{info.require}}</div>
+{% endfor %}
+</div>
+{% endif %}
+
+{% else %}
+<p>You don't have timetable
+{% endif %}
+</div>
+{% endblock %}

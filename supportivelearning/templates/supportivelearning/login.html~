@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title%}Home{% endblock %} 
+{% block content%}
+{% if errors %}
+{% for error in errors %}
+<p>{{ error }}</p>
+{% endfor %}
+{% endif %}
+<form action="/login/" method="post" class='fomr-control'>
+	{% csrf_token %}
+	<table>
+		<div class="form-group">
+			<label for="username">Username</label>
+			<input name="username" id='username' />
+		</tr>
+		<tr>
+			<td>Password</td>
+			<td><input name="password" type="password" />
+		</tr>
+		<tr>
+			<td><input type="checkbox" name="remember" id="rememeber_cb" />
+				<label for="rememeber_cb">Rememeber me</label></td>
+			<td><input type="Submit" class="btn btn-primary" />
+		</tr>
+	</table>
+</form>
+{% endblock %}

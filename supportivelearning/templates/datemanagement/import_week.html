@@ -1,0 +1,65 @@
+{% extends 'base.html' %} 
+{% block title%}Home{% endblock %}
+{% block static %}
+<script>
+	$(document).ready(function(){
+		$(".date-picker").datepicker();
+	});
+</script>
+{% endblock %} 
+{% block content%} 
+{% if weeks %}
+<form action="/import/week/save/" method="post" class='form'>
+{% csrf_token %}
+	{% for week in weeks %}
+		<div class='form-group'>
+		{% if type == '1' %}
+			<span>		Week: {{forloop.counter}} <input type='hidden' name='week' value='{{forloop.counter}}' /></span>
+			{% else %}
+			<span>Week: {{forloop.counter0}} <input type='hidden' name='week' value='{{forloop.counter0}}' /></span>
+			{% endif %}
+			<span>Start: <input type="text" class='date-picker' name='start' value='{{week.start}}' /></span>
+			<span>End: <input type="text" class='date-picker' name='end' value='{{week.end}}' /></span>
+		</div>
+	{% endfor %}
+	<input type='hidden' name='type' value='{{type}}' />
+	<input type='hidden' name='semester' value='{{semester}}' />
+	<input type='hidden' name='start' value='{{start}}' />
+	<input type='hidden' name='end' value='{{end}}' />
+	<input type='hidden' name='years' value='{{year.start}}' />
+	<input type='hidden' name='yeare' value='{{year.end}}' />
+	<input type='hidden' name='student_year' value='{{student_year}}' />
+{% else %}
+<form action="/import/week/" method="post">
+{% csrf_token %}
+	<div class='form-group'>
+		<label for='start'>Start</label> <input type="text" class="date-picker" id='start' name='start' class='form-control' /> 	
+		<label for='end'>End</label> <input type="text" class="date-picker" id='end' name='end' class='form-control' /> 	
+	</div>
+	<div class='form-group'>
+		<label for='type'>Type</label><select name='type' id='type' class='form-control'>
+			<option value='1'>5 weeks</option>
+			<option value='0'>15 weeks</option>
+		</select>
+	</div>	
+	<div class='form-group'>
+		<label>Semester:</label>
+		 <input type="radio" name="semester" checked="checked" id="semester1" value="1" class='form-control' />
+		 <label for="Semester 1">Semester 1</label>
+		<input type="radio" name="semester" id="semester2" value="2"  class='form-control'  /><label for="Semester2">Semester 2</label>
+	</div>
+	<div>
+		<label>Year:</label> {{year.start}} - {{year.end}}
+	</div>
+	<div>
+	<label for='year'>Student year</label><select name='student_year' id='year' class='form-control'>
+		{% for sy in student_years %}
+			<option>{{sy.name}}</option>
+		{% endfor %}
+	</select>
+	</div>
+	
+{% endif %}
+<input type="submit" value="upload" class="btn btn-primary"  />
+</form>
+{% endblock %}

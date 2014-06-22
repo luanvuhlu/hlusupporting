@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{{ subject }}{% endblock %} 
+{% block content%}
+	{% if subject %}
+	{{ subject }}
+	{% for week in weeks %}
+	<ul>
+		<li>
+			<div>Week: {{week.detail.number}}</div>
+			{% if week.detail.note %}<div>Note: {{week.detail.note}}</div>{% endif %}
+			<ul>
+			{% for day in week.days %}
+				<li>
+					<div>{{ day }}</div>
+					<div>Content: {{ day.content }}</div>
+					<div>Require: {{ day.require }}</div>
+				</li>
+			{% endfor %}
+			</ul>
+		</li>
+	</ul>
+	{% endfor %}
+	{% if homeworks %}
+	Works
+	<ul>
+	{% for homework in homeworks %}
+		<li>
+			<div>Type: {{ homework.type }}</div>
+			<div>Require: {{ homework.require }}</div>
+			<div>{{ homework.pages }} pages</div>
+		</li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+	{% else %}
+	<p>Cannot find subject
+	{% endif %}
+{% endblock %}

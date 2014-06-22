@@ -1,0 +1,15 @@
+{% extends 'base.html' %} 
+{% block title%}Home{% endblock %} 
+{% block content%} 
+<form action="/import/upload/" method="post"  enctype="multipart/form-data" class='form-control'>
+{% if alerts %}
+{% for alert in alerts %}
+<div>{{alert}}</div>
+{% endfor %}
+{% endif %}
+{% csrf_token %}
+{{ form }}
+<div class='form-group'><input type="submit" value="Upload"  class="btn btn-primary" /></div>
+</form>
+
+{% endblock %}
