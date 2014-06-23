@@ -24,14 +24,14 @@ class TimeTableFile:
 		tmp=str.split('\n')
 		days=[]
 		for i in range(1, len(tmp)):
-            day = {'week_day': 0, 'start': 0, 'end': 0, 'location': '', 'room': 0}
-			d=tmp[i].split()
-            day['week_day'] = d[1]
-			day['start']=d[3].split(',')[0]
-			day['end']=d[3].split(',')[1]
-			day['location']=d[7]
-			day['room']=re.search('\d+$', d[5]).group(0)
-			days.append(day)
+		    day = {'week_day': 0, 'start': 0, 'end': 0, 'location': '', 'room': 0}
+		    d=tmp[i].split()
+		day['week_day'] = d[1]
+		day['start']=d[3].split(',')[0]
+		day['end']=d[3].split(',')[1]
+		day['location']=d[7]
+		day['room']=re.search('\d+$', d[5]).group(0)
+		days.append(day)
 		return days
 	def set_subjects(self):
 		tkb = open_workbook(file_contents=self.file_contents)
@@ -76,11 +76,11 @@ class TimeTableFile:
 		for tmp_sub in tmp_subjects:
 			subject={'name':'', 'theory': '', 'seminar':'', 'start':'', 'end':'', 'day_theories':[], 'day_seminars':[]}
 			subject['name']=tmp_sub['name']
-			subject_time=self.get_subject_time(tmp_sub['time1'])
-			subject['start']=subject_time[0]
-			subject['end']=subject_time[1]
-            if len(tmp_sub['class2']) > 0 and len(tmp_sub['class1']) > len(tmp_sub['class2']):
-                subject['seminar']=tmp_sub['class1']
+		    	subject_time=self.get_subject_time(tmp_sub['time1'])
+		    	subject['start']=subject_time[0]
+            		subject['end']=subject_time[1]
+            		if len(tmp_sub['class2']) > 0 and len(tmp_sub['class1']) > len(tmp_sub['class2']):
+				subject['seminar']=tmp_sub['class1']
 				subject['theory']=tmp_sub['class2']
 				day_seminars=self.get_days(tmp_sub['time1'])
 				day_theories=self.get_days(tmp_sub['time2'])

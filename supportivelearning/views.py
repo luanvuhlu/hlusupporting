@@ -139,12 +139,12 @@ def get_week_detail(days, select_day):
         except Week_Date.DoesNotExist:
             print "Week Date does not exist"
             continue
-try:
-    document = Document.objects.get(subject=day.timetable_subject.subject)
-except Document.DoesNotExist:
-    print "Document does not exist"
-    continue
-try:
+        try:
+            document = Document.objects.get(subject=day.timetable_subject.subject)
+        except Document.DoesNotExist:
+            print "Document does not exist"
+            continue
+        try:
             week_document=Week_Document.objects.get(document=document, number=week_date.number)
             subject=document.subject.subject.alias
             if prev_subject != subject and (week_document.note or week_document.require):
@@ -154,11 +154,10 @@ try:
             for day_document in days_document:
                 if day_document.type==day.type and day_document.number==day.number:
                     days_week_detail.append({'day': day, 'content': day_document.content, 'note': day_document.note})
-
-except Week_Document.DoesNotExist:
-    print "Week Document does not exist"
-#         except:
-#             continue
+        except Week_Document.DoesNotExist:
+            print "Week Document does not exist"
+        #         except:
+        #             continue
     week_detail={'week_infos':week_infos, 'days':days_week_detail}
     return week_detail
 def timetable_detail(request, id, year, month, day):
