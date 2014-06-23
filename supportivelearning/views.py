@@ -133,40 +133,34 @@ def get_week_detail(days, select_day):
             type_subject=True # 5 weeks
         else:
             type_subject=False # than 5 weeks
-        week_date=Week_Date.objects.get(start=start_week, type=type_subject, student_year=day.timetable_subject.subject.student_year)
-        document=Document.objects.get(subject=day.timetable_subject.subject)
-        print document.id
-        print week_date.number
         try:
+            week_date = Week_Date.objects.get(start=start_week, type=type_subject,
+                                              student_year=day.timetable_subject.subject.student_year)
+        except Week_Date.DoesNotExist:
+            print "Week Date does not exist"
+            continue
+try:
+    document = Document.objects.get(subject=day.timetable_subject.subject)
+except Document.DoesNotExist:
+    print "Document does not exist"
+    continue
+try:
             week_document=Week_Document.objects.get(document=document, number=week_date.number)
             subject=document.subject.subject.alias
-            if prev_subject != subject and week_document.note :
+            if prev_subject != subject and (week_document.note or week_document.require):
                 prev_subject=subject
                 week_infos.append({'subject': subject, 'note':week_document.note, 'require': week_document.require})
             days_document=Day_Document.objects.filter(week=week_document)
             for day_document in days_document:
                 if day_document.type==day.type and day_document.number==day.number:
-                    day_week_detail={'day':day, 'content':day_document.content,  'note':day_document.note}
-                    days_week_detail.append(day_week_detail)
-        except:
-            print "Don't have week_document"
-        
-        
+                    days_week_detail.append({'day': day, 'content': day_document.content, 'note': day_document.note})
+
+except Week_Document.DoesNotExist:
+    print "Week Document does not exist"
 #         except:
 #             continue
     week_detail={'week_infos':week_infos, 'days':days_week_detail}
     return week_detail
-def quick_timetable(request):
-    time=datetime.today().strftime("%Y/%m/%d/")
-    if not request.user.is_authenticated():
-        save_url(request)
-        return HttpResponseRedirect("/login/")
-    # try:
-    timetable=TimeTable.objects.filter(student__user=request.user)[0]
-    id=str(timetable.id)
-    # except:
-        # pass
-    return HttpResponseRedirect('/timetable/'+id+'/'+time)
 def timetable_detail(request, id, year, month, day):
     timetable_subjects=TimeTableSubject.objects.filter(timetable=id)
     days=Day.objects.filter(timetable_subject=timetable_subjects)
@@ -217,24 +211,31 @@ def file_upload_view(request):
                 template=APP_NAME+"/fileupload.html"
                 request.session[TIMETABLE_DATA_SESSION]=json.dumps(timetable.subjects)
                 alerts=[]
-#                 try:
-                student=Student.objects.get(user=request.user)
-#                 except:
-#                     save_url(request)
+                try:
+                    student = Student.objects.get(user=request.user)
+                except Student.DoesNotExist:
+                    print "Student does not exist"
+                    request.session[TIMETABLE_DATA_SESSION] = ''
+                #                     save_url(request)
 #                     return HttpResponseRedirect("/login/")
 #                 
-                if False and timetable.student_code !=student.code:
+                if False and timetable.student_code != student.code:  # Check student code and student code in file
+                    request.session[TIMETABLE_DATA_SESSION] = ""
+                    form = TimeTableUploadForm()
+                    print "Timetable code " + timetable.student_code
+                    print "Student code " + student.code
                     alerts.append("Code in timetable not compair your code ! Please try again !")
                     context=RequestContext(
                            request,
                            {
                             'timetable':timetable,
+                            'form': form,
                             'alerts':alerts,
                             }
                            )
                     return render_to_response(template, context)
                 else:
-                    return HttpResponseRedirect("/import/nexstep/")
+                    return HttpResponseRedirect("/import/next/")
             else:
                 return HttpResponse("Cannot find subjects")
     else:
@@ -244,8 +245,9 @@ def file_upload_view(request):
                               context_instance=RequestContext(request)
                               )
 
-def import_nextstep(request):
-    template=APP_NAME+'/upload_nextstep.html'
+
+def import_next(request):
+    template = APP_NAME + '/upload_next.html'
     subjects_timetable=json.loads(request.session.get(TIMETABLE_DATA_SESSION))
     if subjects_timetable:
         all_subjects_select=[]
@@ -259,10 +261,13 @@ def import_nextstep(request):
                     options.append(s.student_year.name)
                 select['options']=options
             all_subjects_select.append(select)
+        years = Year.objects.all()
+        year_now = date.today().year
     context=RequestContext(
                            request,
                            {
                             'all_subjects_select':all_subjects_select,
+                            'years': years,
                             }
                            )
     return render_to_response(template, context) 
@@ -271,24 +276,27 @@ def import_final(request):
     student_years=request.GET.getlist('student-year')
     subjects_timetable=json.loads(request.session.get(TIMETABLE_DATA_SESSION))
     student=Student.objects.get(user=request.user)
+    # try:
     try:
-        try:
-            timetable=TimeTable.objects.filter(student=student, semester=1, year=1)[0]
-        except:
-            print "Not match timetable"
-            timetable=TimeTable()
-            timetable.student=student
-            timetable.semester=1
-            timetable.year=Year.objects.get(id=1)
-            timetable.save()
-        if subjects:
-            for i in range(len(subjects)):
+        timetable = TimeTable.objects.filter(student=student, semester=1, year=1)[0]
+    except:
+        print "Not match timetable"
+        timetable = TimeTable()
+        timetable.student = student
+        timetable.semester = 1
+        timetable.year = Year.objects.get(id=1)
+        timetable.save()
+
+    if subjects:
+        for i in range(len(subjects)):
+            try:
+                subject_year = SubjectStudentYear.objects.get(subject__name=subjects[i],
+                                                              student_year__name=student_years[i])
+            except SubjectStudentYear.DoesNotExist:
+                print "SubjectStudentYear does not exist"
+                continue
+            for sub in subjects_timetable:
                 try:
-                    subject_year=SubjectStudentYear.objects.get(subject__name=subjects[i], student_year__name=student_years[i])
-                except:
-                    print "cannot find subject"
-                    continue
-                for sub in subjects_timetable:
                     if sub['name'] == subjects[i]:
                         try:
                             subject_timetable=TimeTableSubject.objects.filter(subject=subject_year, timetable=timetable)[0]
@@ -296,22 +304,23 @@ def import_final(request):
                             subject_timetable=TimeTableSubject()
                         subject_timetable.subject=subject_year
                         subject_timetable.timetable=timetable
-#                         try:
+                        #                         try:
                         start=datetime.strptime(sub['start'], '%d/%m/%Y')
                         end=datetime.strptime(sub['end'], '%d/%m/%Y:')
-#                         except:
-#                             start=datetime.today()
-#                             end=datetime.today()
+                        # except:
+                        #                             start=datetime.today()
+                        #                             end=datetime.today()
                         subject_timetable.start=start
                         subject_timetable.end=end
                         subject_timetable.save()
-#                         try:
+    #                         try:
                         days=Day.objects.filter(timetable_subject=subject_timetable)
                         for day in days:
                             day.delete()
-#                         except:
-#                             print "Do not have day"
-                        for data in sub['day_theories']:
+    #                         except:
+                            # print "Do not have day"
+                        for i in range(len(sub['day_theories'])):
+                            data = sub['day_theories'][i]
                             day=Day()
                             day.timetable_subject=subject_timetable
                             day.type=False # Theory
@@ -319,25 +328,32 @@ def import_final(request):
                             day.end_hour=int(data['end'])
                             day.location=data['location']
                             day.room=data['room']
-                            day.week_day=int(data['week_day'])
+                            # day.week_day=int(data['week_day'])
+                            day.week_day = int(data['week_day']) - 1  # Day of week not match
+                            day.number = i + 1
                             day.save()
-                        for data in sub['day_seminars']:
-                            day=Day()
+                        for i in range(len(sub['day_seminars'])):
+                            data = sub['day_seminars'][i]
+                            day = Day()
                             day.timetable_subject=subject_timetable
                             day.type=True # Seminar
                             day.start_hour=int(data['start'])
                             day.end_hour=int(data['end'])
                             day.location=data['location']
                             day.room=data['room']
-                            day.week_day=int(data['week_day'])-1 #Day of week not match
+                            day.number=i+1
+                            # if data['week_day']:
+                            day.week_day = int(data['week_day'])-1 #Day of week not match
                             day.save()
-                
-                
-    except:
-        print sys.exc_info()[0]
-        request.session[TIMETABLE_DATA_SESSION]=None
-        return HttpResponseRedirect("/import/upload/")
-    request.session[TIMETABLE_DATA_SESSION]=None    
+                            # else:
+                            # print "Week day is None"
+                except:
+                    continue
+    # except:
+    # print sys.exc_info()[0]
+    #     request.session[TIMETABLE_DATA_SESSION]=None
+    #     return HttpResponseRedirect("/import/upload/")
+    request.session[TIMETABLE_DATA_SESSION] = None
     today=datetime.today()
     return HttpResponseRedirect("/timetable/"+str(timetable.id)+"/"+str(today.year)+"/"+str(today.month)+"/"+str(today.day)+"/")    
 def settings_view(request):
@@ -346,3 +362,14 @@ def settings_view(request):
                           request,
                           )
     return HttpResponse(template.render(context))
+def quick_timetable(request):
+    time = datetime.today().strftime("%Y/%m/%d/")
+    if not request.user.is_authenticated():
+        save_url(request)
+        return HttpResponseRedirect("/login/")
+    # try:
+    timetable = TimeTable.objects.filter(student__user=request.user)[0]
+    id = str(timetable.id)
+    # except:
+    # pass
+    return HttpResponseRedirect('/timetable/' + id + '/' + time)

@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}Settings{% endblock %}
-{% block content%}
-<div class="container-fluid">
-<a href="/import/upload/">Import Timetable</a>
-</div>
+{% block content %}
+    <div class="container-fluid">
+    <div>
+        <ul>
+            <li>
+                <a href="/import/upload/">Import Timetable</a>
+            </li>
+            <li>
+                <a href="/import/week/document/">Import Week of Subject Document</a>
+            </li>
+            <li>
+                <a href="/import/week/">Import Week</a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

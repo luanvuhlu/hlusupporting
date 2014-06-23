@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <form action="/import/final/" method="get" class="form">
+        {% csrf_token %}
+        {% for subject in all_subjects_select %}
+            <div class="form-group">
+            <label for="student-year">
+                {{ subject.name }}
+            </label>
+            {% if subject.options|length > 0 %}
+                <input type="hidden" name="subject" value="{{ subject.name }}"/>
+
+                <select name="student-year" class="form-control">
+                    {% for option in subject.options %}
+                        <option>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <span>Subject cannot find</span>
+
+            {% endif %}
+        {% endfor %}
+        <div class="form-group">
+            <label for="year">
+                Year:
+            </label>
+            <select name="year" class="form-control" id="year">
+                {% for year in years %}
+                    <option value="{{ year.name }}">{{ year.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div><input type="submit" value="save"/></div>
+        </div>
+    </form>
+{% endblock %}

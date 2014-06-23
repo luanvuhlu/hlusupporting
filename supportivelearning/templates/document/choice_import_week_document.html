@@ -1,58 +1,72 @@
 {% extends 'base.html' %}
 {% block title %}Import week document for {{ subject.subject.alias }}{% endblock %}
 {% block static %}
-	<script>
-		$(document).ready(function(){
-			$('#load_subject').click(function(){
-				var subject_name=$("#subject option:selected").val();
-				var student_year=$("#subject option:selected").attr('year');
-				var days_in_week=$(".days_in_week:checked").val();
-				var url='/import/week/document/loadsubject/'+subject_name+'/'+student_year+'/'+days_in_week+'/';
-				$.get(url, function(data){
-						$('#subject_detail').html(data);
-					})
-				});
-		});
-	</script>
-{% endblock %} 
-{% block content%}
-	{% if subject_student_years %}
-	<div class='form-group'>
-	Subject: <select name="subject" id="subject" class='form-control'>
-	{% for subject in subject_student_years %}
-			<option value="{{subject.subject.name}}" year="{{subject.student_year.name}}">
-				{{subject.subject.name}} - {{subject.student_year.name}}
-			</option>
-{% endfor %}
-</select>
-</div>
-<div>
-Days in week:
-<div class="form-group radio">
-<div class="radio">
-	<input type="radio" id="twodays" class="days_in_week" name="days_in_week" checked="checked" value="2">
-	<label for="twodays">2</label>
-	</div>
-<div class="radio">
-	<input type="radio" id="threedays" class="days_in_week" name="days_in_week" value="3">
-	<label for="threedays">3</label>
-	</div>
-<div class="radio">	
-	<input type="radio" id="fourdays" class="days_in_week" name="days_in_week" value="4">
-	<label for="fourdays">4</label>
-	</div>
-<div class="radio">
-	<input type="radio" id="fivedays" class="days_in_week" name="days_in_week" value="5">
-	<label for="fivedays">5</label>
-	</div>
-	</div>
-<div class="form-group">
-	<input type="button" id="load_subject" value="Load" class="btn btn-primary" />
-	</div>
-	
-	<div id="subject_detail">
-		
-	</div>
-{% endif %}
-			
+    <script>
+        $(document).ready(function () {
+            $('#load_subject').click(function () {
+                var subject_name = $("#subject option:selected").val();
+                var student_year = $("#subject option:selected").attr('studentyear');
+                var year = $("#subject option:selected").attr('year');
+                var days_in_week = $(".days_in_week:checked").val();
+                var url = '/import/week/document/loadsubject/' + subject_name + '/' + student_year + '/' + year + '/';
+                $.get(url, function (data) {
+                    $('#subject_detail').html(data);
+                })
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    {% if subject_student_years %}
+        <div class='form-group'>
+            <label for="subject">
+                Subject:
+            </label>
+            <select name="subject" id="subject" class='form-control'>
+                {% for subject in subject_student_years %}
+                    <option value="{{ subject.subject.name }}" studentyear="{{ subject.student_year.name }}"
+                            year="{{ subject.year }}">
+                        {{ subject.subject.name }} - {{ subject.student_year.name }} - {{ subject.year }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        {#<div>#}
+        {#Days in week:#}
+        {#<div class="form-group radio">#}
+        {#<div class="radio">#}
+        {#	<input type="radio" id="two_days" class="days_in_week" name="days_in_week" checked="checked" value="2">#}
+        {#	<label for="two_days">2</label>#}
+        {#	</div>#}
+        {#<div class="radio">#}
+        {#	<input type="radio" id="three_days" class="days_in_week" name="days_in_week" value="3">#}
+        {#	<label for="three_days">3</label>#}
+        {#	</div>#}
+        {#<div class="radio">	#}
+        {#	<input type="radio" id="four_days" class="days_in_week" name="days_in_week" value="4">#}
+        {#	<label for="four_days">4</label>#}
+        {#	</div>#}
+        {#<div class="radio">#}
+        {#	<input type="radio" id="five_days" class="days_in_week" name="days_in_week" value="5">#}
+        {#	<label for="five_days">5</label>#}
+        {#	</div>#}
+        {#	</div>#}
+        <div class="form-group">
+            <input type="button" id="load_subject" value="Load" class="btn btn-primary"/>
+        </div>
+        <form action="/import/week/document/save/" method="post" class='form-horizontal'>
+            {% csrf_token %}
+            <div id="subject_detail"></div>
+            <div>
+                <input type="submit" value="update" class="btn btn-primary"/>
+            </div>
+        </form>
+
+
+    {% else %}
+        <div>
+            Don't have anything subject student year
+        </div>
+    {% endif %}
+    </div>
 {% endblock %}

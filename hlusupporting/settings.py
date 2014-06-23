@@ -10,7 +10,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import  django
+import django
+
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -76,8 +77,8 @@ WSGI_APPLICATION = 'hlusupporting.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
+# DATABASES = {
+# 'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #        'NAME': 'hlusupportive',
 #        'HOST': '127.0.0.1',
@@ -85,9 +86,9 @@ WSGI_APPLICATION = 'hlusupporting.wsgi.application'
 #        'USER': 'root',
 #        'PASSWORD': '30121992',
 #        'OPTIONS': {'charset': 'utf8'},
-#        
+#
 #    }
-#}
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -109,7 +110,7 @@ USE_L10N = True
 USE_TZ = True
 
 TEMPLATE_DIRS = (
-    os.path.join(SITE_ROOT,'templates'),
+    os.path.join(SITE_ROOT, 'templates'),
 
 )
 PROJECT_DIR = os.path.dirname(__file__)

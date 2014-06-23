@@ -1,0 +1,72 @@
+
+<div>
+
+    {% for w in weeks %}
+
+        <div>Week: {{ w.number }}
+            <div class='form-group'>
+                <label for="week_require{{ w.number }}">
+                    Week Require
+                </label>
+                <textarea name="week_require{{ w.number }}" id="week_require{{ w.number }}"
+                          class="form-control">{{ w.require }}</textarea>
+            </div>
+            <input type="hidden" name="week" value="{{ w.number }}"/>
+            {% for d in w.days %}
+                <div>
+                    Day {{ forloop.counter }}
+                    <div class='form-group'>
+                        <label for='type{{ w.number }}'>Type:</label>
+                        <select name="day_type{{ w.number }}" class='form-control' id='type'>
+                            {% if d.type == True %}
+                                <option value="True" selected>Seminar</option>
+                            {% else %}
+                                <option value="True">Seminar</option>
+                            {% endif %}
+                            {% if d.type == False %}
+                                <option value="False" selected>Theory</option>
+                            {% else %}
+                                <option value="False">Theory</option>
+                            {% endif %}
+                            {% if d.type == None %}
+                                <option value="None" selected>None</option>
+                            {% else %}
+                                <option value="None">None</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class='form-group'>
+                        <label for='number{{ w.number }}'>Number:</label>
+                        <select name="day_number{{ w.number }}" class='form-control' id='number{{ w.number }}'>
+                            {% for number in '12345' %}
+                                {% if d.number|lower == number %}
+                                    <option value="{{ number }}" selected>{{ number }}</option>
+                                {% else %}
+                                    <option value="{{ number }}">{{ number }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class='form-group'>
+                        <label for='content{{ w.number }}'>
+                            Content:
+                        </label>
+                        <textarea name="day_content{{ w.number }}" rows="5" id='content{{ w.number }}' cols="40"
+                                  class='form-control'>
+                            {{ d.content }}
+                        </textarea>
+                    </div>
+                    Note:
+                    <input name="day_note{{ w.number }}" type="text" class='form-control' value="{{ d.note }}"/>
+
+                </div>
+                </div>
+
+            {% endfor %}
+		<hr />
+	{% endfor %}
+    <input type="hidden" name="subject" value="{{ subject_student_year.subject.name }}"/>
+    <input type="hidden" name="student_year" value="{{ subject_student_year.student_year.name }}"/>
+    <input type="hidden" name="year" value="{{ subject_student_year.year.name }}"/>
+</div>
+
