@@ -3,7 +3,11 @@
 {% block static %}
     <script>
         $(document).ready(function () {
+            $('#subject').change(function(){
+                $('#load_subject').removeClass('disabled')
+            })
             $('#load_subject').click(function () {
+                $(this).addClass('disabled')
                 var subject_name = $("#subject option:selected").val();
                 var student_year = $("#subject option:selected").attr('studentyear');
                 var year = $("#subject option:selected").attr('year');
@@ -17,6 +21,10 @@
     </script>
 {% endblock %}
 {% block content %}
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
     {% if subject_student_years %}
         <div class='form-group'>
             <label for="subject">
@@ -31,26 +39,6 @@
                 {% endfor %}
             </select>
         </div>
-        {#<div>#}
-        {#Days in week:#}
-        {#<div class="form-group radio">#}
-        {#<div class="radio">#}
-        {#	<input type="radio" id="two_days" class="days_in_week" name="days_in_week" checked="checked" value="2">#}
-        {#	<label for="two_days">2</label>#}
-        {#	</div>#}
-        {#<div class="radio">#}
-        {#	<input type="radio" id="three_days" class="days_in_week" name="days_in_week" value="3">#}
-        {#	<label for="three_days">3</label>#}
-        {#	</div>#}
-        {#<div class="radio">	#}
-        {#	<input type="radio" id="four_days" class="days_in_week" name="days_in_week" value="4">#}
-        {#	<label for="four_days">4</label>#}
-        {#	</div>#}
-        {#<div class="radio">#}
-        {#	<input type="radio" id="five_days" class="days_in_week" name="days_in_week" value="5">#}
-        {#	<label for="five_days">5</label>#}
-        {#	</div>#}
-        {#	</div>#}
         <div class="form-group">
             <input type="button" id="load_subject" value="Load" class="btn btn-primary"/>
         </div>
@@ -61,12 +49,13 @@
                 <input type="submit" value="update" class="btn btn-primary"/>
             </div>
         </form>
-
-
     {% else %}
         <div>
             Don't have anything subject student year
         </div>
     {% endif %}
+    </div>
+    </div>
+    </div>
     </div>
 {% endblock %}

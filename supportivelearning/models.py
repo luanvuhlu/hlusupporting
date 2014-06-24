@@ -50,29 +50,21 @@ class Student(models.Model):
 
 class Year(models.Model):
     name = models.CharField(max_length=MAX_YEAR_NAME_FIELD)
-
     def __unicode__(self):
         return self.name
-
     class Meta:
         verbose_name = "Year"
         ordering = ["-name"]
-
-
 class TimeTable(models.Model):
     SEMESTER_CHOICES = ((1, "Semester 1"), (2, "Semester 2"),)
     student = models.ForeignKey(Student)
     semester = models.SmallIntegerField(choices=SEMESTER_CHOICES)
     year = models.ForeignKey(Year)
     created_time = models.DateTimeField(auto_now_add=True)
-
     def __unicode__(self):
         return str(self.id)
-
     class Meta:
         verbose_name = "TimeTable"
-
-
 class Subject(models.Model):
     name = models.CharField(max_length=MAX_SUBJECT_NAME, unique=True)
     alias = models.CharField(max_length=MAX_SUBJECT_NAME)

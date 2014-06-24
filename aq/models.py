@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 
 # Create your models here.
+MAX_SHORT_QUESTION_ANSWER=200
 class Tag(models.Model):
     name=models.CharField(max_length=100)
     description=models.CharField(max_length=400, blank=True)

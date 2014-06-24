@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from supportivelearning.views import index, login_view, logout_view, \
-    timetable_list_view, timetable_detail, \
+    timetable_detail, \
     quick_timetable, file_upload_view, \
     import_next, import_final, settings_view, profile_view
 from document.views import subject_student_view
@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^login/$', login_view),
     url(r'^logout/$', logout_view),
     url(r'^profile/$', profile_view),
-    url(r'^timetable/list/$', timetable_list_view),
+    # url(r'^timetable/list/$', timetable_list_view),
     url(r'^timetable/(?P<id>\d+)/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/$', timetable_detail),
     url(r'^tt/$', quick_timetable),
     url(r'^subject/(?P<slug>(([0-9a-z-]+)\.html))/$', subject_student_view),

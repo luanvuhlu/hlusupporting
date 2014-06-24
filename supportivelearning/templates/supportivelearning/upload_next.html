@@ -12,9 +12,13 @@
                 <input type="hidden" name="subject" value="{{ subject.name }}"/>
 
                 <select name="student-year" class="form-control">
+                    {% if subject.options %}
                     {% for option in subject.options %}
-                        <option>{{ option }}</option>
+                        <option value="{{ option }}">{{ option }}</option>
                     {% endfor %}
+                        {% else %}
+                        <option></option>
+                        {% endif %}
                 </select>
             {% else %}
                 <span>Subject cannot find</span>

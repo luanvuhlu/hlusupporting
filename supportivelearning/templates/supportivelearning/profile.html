@@ -1,5 +1,70 @@
-{% extends 'base.html' %} 
-{% block title%}Profile{% endblock %}
-{% block content%}
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 col-md-2">
+                <ul class="list-unstyled">
+                    <li>
+                        <img src="" class="img-responsive" alt="Avatar" width="150px"/>
+                    </li>
+                    <li>
+                        {{ user }}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-6 col-md-6">
+                <ul class="nav nav-tabs" id="content-tab">
+                    <li class="active"><a href="#timetablelist" data-toggle="tab">TimeTable</a></li>
+                    <li><a href="#followmessage" data-toggle="tab">Message</a></li>
+                    <li><a href="#followquestion" data-toggle="tab">Question</a></li>
+                    <li><a href="#news" data-toggle="tab">News</a></li>
+                    <li><a href="#note" data-toggle="tab">Note</a></li>
+                </ul>
 
+                <div class="tab-content">
+                    <div class="tab-pane fade active" id="timetablelist">
+                        {% if timetables %}
+                            <table class='table table-bordered'>
+                                <thead>
+                                <th>No</th>
+                                <th>Semester</th>
+                                <th>Year</th>
+                                <th></th>
+                                </th>
+                                </thead>
+                                <tbody>
+                                {% for timetable in timetables %}
+                                    <tr>
+                                        <td></td>
+                                        <td>{{ timetable.semester }}</td>
+                                        <td>{{ timetable.year }}</td>
+                                        <td>
+                                            <a href="/timetable/{{ timetable.id }}/{% now "Y/m/d" %}">View</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                        {% if not timetables %}
+                            <p>You don't have timetable
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="followmessage">followmessage</div>
+                    <div class="tab-pane fade" id="followquestion">followquestion</div>
+                    <div class="tab-pane fade" id="news">followtag</div>
+                    <div class="tab-pane fade" id="note">note</div>
+                </div>
+                <script>
+                    $(function () {
+                        $('#content-tab a:last').tab('show')
+                    })
+                </script>
+            </div>
+            <div class="col-sm-6 col-md-4">
+            Suggest
+        </div>
+        </div>
+    </div>
 {% endblock %}

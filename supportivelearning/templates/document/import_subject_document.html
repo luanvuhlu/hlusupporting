@@ -1,8 +1,6 @@
 
 <div>
-
     {% for w in weeks %}
-
         <div>Week: {{ w.number }}
             <div class='form-group'>
                 <label for="week_require{{ w.number }}">
@@ -18,15 +16,15 @@
                     <div class='form-group'>
                         <label for='type{{ w.number }}'>Type:</label>
                         <select name="day_type{{ w.number }}" class='form-control' id='type'>
-                            {% if d.type == True %}
-                                <option value="True" selected>Seminar</option>
-                            {% else %}
-                                <option value="True">Seminar</option>
-                            {% endif %}
                             {% if d.type == False %}
                                 <option value="False" selected>Theory</option>
                             {% else %}
                                 <option value="False">Theory</option>
+                            {% endif %}
+                            {% if d.type == True %}
+                                <option value="True" selected>Seminar</option>
+                            {% else %}
+                                <option value="True">Seminar</option>
                             {% endif %}
                             {% if d.type == None %}
                                 <option value="None" selected>None</option>

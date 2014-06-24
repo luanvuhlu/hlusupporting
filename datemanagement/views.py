@@ -8,7 +8,7 @@ from datemanagement.models import Week
 URL_SESSION = "url_previous_session"
 APP_NAME = 'datemanagement'
 
-
+# Import week
 def import_week_view(request):
     template = APP_NAME + "/import_week.html"
     errors = []
@@ -106,3 +106,4 @@ def save_import_week(request):
         return HttpResponseRedirect("/import/week/")
     else:
         return HttpResponseRedirect("/import/week/")
+# End Import week

@@ -7,6 +7,8 @@ import re
 URL_SESSION="url_previous_session"
 APP_NAME='document'
 # Create your views here.
+
+# Import Subject Student Year Document
 def subject_student_view(request, slug):
     template=APP_NAME+"/subject_student_year.html"
     try:
@@ -41,6 +43,8 @@ def subject_student_view(request, slug):
                             }
                            )
     return render_to_response(template, context)
+# End Import Subject Student Year Document
+# Import week document
 def import_week_document(request):
     # if request.method=='POST':
     # days=  request.POST.getlist('day')
@@ -193,3 +197,4 @@ def save_week_document_import(request):
     else:
         return HttpResponseRedirect("/import/week/document/")
     return HttpResponse("Saved")
+# End Import week document
