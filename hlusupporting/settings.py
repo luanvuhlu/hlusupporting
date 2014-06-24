@@ -40,10 +40,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dajaxice',
+    'django_ajax',
     'supportivelearning',
     'document',
     'datemanagement',
+    'aq',
+    'notification',
 )
 
 MIDDLEWARE_CLASSES = (

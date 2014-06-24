@@ -1,5 +1,7 @@
 from django.contrib import admin
-from supportivelearning.models import Student, Day, Faculity, Year, TimeTableSubject, TimeTable, SubjectStudentYear, Subject, StudentYear, FaculitySubject, Notification
+from supportivelearning.models import Student, Day, Lecturer, Year, \
+    TimeTableSubject, TimeTable, SubjectStudentYear, \
+    Subject, StudentYear, LecturerSubject, Message
 
 class StudentAdmin(admin.ModelAdmin):
     list_display=('code', 'first_name', 'last_name', 'student_year', )
@@ -48,22 +50,21 @@ class StudentYearAdmin(admin.ModelAdmin):
     list_display_links=('name', 'student_sum', )
     def student_sum(self, studentyear):
         return len(Student.objects.filter(student_year=studentyear.id))     
-class FaculitySubjectAdmin(admin.ModelAdmin):
+class LecturerSubjectAdmin(admin.ModelAdmin):
     ordering=('-subject', )
-    list_display=('subject', 'faculity', )
-    list_display_links=('subject', 'faculity', )
-class NotificationAdmin(admin.ModelAdmin):
+    list_display=('subject', 'lecturer', )
+    list_display_links=('subject', 'lecturer', )
+class MessageAdmin(admin.ModelAdmin):
     pass
 # Register your models here.
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Day, DayAdmin)
-admin.site.register(Faculity, FaculityAdmin)
-# admin.site.register(Message, MessageAdmin)
+admin.site.register(Lecturer, FaculityAdmin)
+admin.site.register(Message, MessageAdmin)
 admin.site.register(Year, YearAdmin)
 admin.site.register(TimeTableSubject, TimeTableSubjectAdmin)
 admin.site.register(SubjectStudentYear, SubjectStudentYearAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(StudentYear, StudentYearAdmin)
 admin.site.register(TimeTable, TimeTableAdmin)
-admin.site.register(Notification, NotificationAdmin)
-admin.site.register(FaculitySubject, FaculitySubjectAdmin)
+admin.site.register(LecturerSubject, LecturerSubjectAdmin)

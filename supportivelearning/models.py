@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, date
+from aq.models import Question, Answer, Tag
+
 
 MAX_NOTIFICATION_CONTENT = 400
 MAX_NAME_FIELD = 40
@@ -13,39 +15,34 @@ MAX_STUDENT_YEAR_NAME_FIELD = 10
 MAX_LOCATION_FIELD = 50
 MAX_ROOM_FIELD = 10
 
-
-class Notification(models.Model):
-    content = models.CharField(max_length=MAX_NOTIFICATION_CONTENT)
-    time = models.DateTimeField(default=datetime.now())
-    read = models.BooleanField(default=False)
-
-
+class Message(models.Model):
+    tags=models.ManyToManyField(Tag, blank=True)
+    content=models.TextField()
+    user=models.ForeignKey(User)
+    time=models.DateTimeField(default=datetime.now())
+    def __unicode__(self):
+        return self.content
 class StudentYear(models.Model):
     name = models.CharField(max_length=MAX_STUDENT_YEAR_NAME_FIELD, unique=True)
     note = models.CharField(max_length=MAX_NOTE_FIELD, blank=True)
-    notifications = models.ManyToManyField(Notification, blank=True)
-
     def __unicode__(self):
         return self.name
-
     class Meta:
         verbose_name = "Student Year"
-
-
 class Student(models.Model):
-    GENDER_CHOIES = ((0, "Female"), (1, "Male"),)
+    GENDER_CHOICES = ((0, "Female"), (1, "Male"),)
     user = models.OneToOneField(User)
     code = models.CharField(max_length=MAX_CODE_FIELD, blank=False, unique=True)
     student_year = models.ForeignKey(StudentYear)
-    birthday = models.DateField(blank=True);
-    gender = models.BooleanField(default=False, choices=GENDER_CHOIES)
+    birthday = models.DateField(default=date.today());
+    gender = models.BooleanField(default=False, choices=GENDER_CHOICES)
     phone = models.CharField(max_length=MAX_PHONE_FIELD, blank=True)
-    avarta = models.ImageField(upload_to="avarta", blank=True);
-    notifications = models.ManyToManyField(Notification, blank=True)
-
+    avatar = models.ImageField(upload_to="avatar", blank=True);
+    follow_message=models.ManyToManyField(Message, blank=True)
+    follow_question=models.ManyToManyField(Question, blank=True)
+    follow_tag=models.ManyToManyField(Tag, blank=True)
     def __unicode__(self):
         return self.code;
-
     class Meta:
         verbose_name = "Student"
         ordering = ["-code", "-gender"]
@@ -89,31 +86,31 @@ class Subject(models.Model):
         verbose_name = "Subject"
 
 
-class Faculity(models.Model):
+class Lecturer(models.Model):
     GENDER_CHOICES = ((0, "Female"), (1, "Male"),)
     first_name = models.CharField(max_length=MAX_NAME_FIELD)
     last_name = models.CharField(max_length=MAX_NAME_FIELD)
     email = models.EmailField(blank=True);
     phone = models.CharField(max_length=MAX_PHONE_FIELD, blank=True)
     gender = models.BooleanField(default=False, choices=GENDER_CHOICES)
-    avarta = models.FileField(upload_to="avarta", blank=True);
+    avatar = models.FileField(upload_to="avatar", blank=True);
 
     def __unicode__(self):
         return self.first_name + " " + self.last_name
 
     class Meta:
-        verbose_name = "Faculity"
+        verbose_name = "Lecturer"
 
 
-class FaculitySubject(models.Model):
-    faculity = models.ForeignKey(Faculity)
+class LecturerSubject(models.Model):
+    lecturer = models.ForeignKey(Lecturer)
     subject = models.ForeignKey(Subject)
 
     def __unicode__(self):
         return self.subject.name + " " + self.faculity.last_name
 
     class Meta:
-        verbose_name = "Faculity Subject"
+        verbose_name = "Lecturer Subject"
 
 
 class SubjectStudentYear(models.Model):

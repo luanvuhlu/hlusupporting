@@ -63,7 +63,7 @@ def timetable_list_view(request):
         save_url(request)
         return HttpResponseRedirect("/login/")
     timetables=TimeTable.objects.filter(student__user=request.user)
-    template=APP_NAME+'/profile.html'
+    template=APP_NAME+'/timetable_list.html'
     context=RequestContext(
                           request,
                           {'timetables':timetables}
@@ -357,6 +357,12 @@ def import_final(request):
     return HttpResponseRedirect("/timetable/"+str(timetable.id)+"/"+str(today.year)+"/"+str(today.month)+"/"+str(today.day)+"/")    
 def settings_view(request):
     template=loader.get_template(APP_NAME+"/settings.html")
+    context=RequestContext(
+                          request,
+                          )
+    return HttpResponse(template.render(context))
+def profile_view(request):
+    template=loader.get_template(APP_NAME+"/profile.html")
     context=RequestContext(
                           request,
                           )
